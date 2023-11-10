@@ -15,12 +15,17 @@ fs=250;
 
 %TF already computed in dataTF
 minfreq=9.25; maxfreq=14.75; nFreq=12;
+% it is now possible to define frequencies for which TF is computed:
+% minfreq=[9.25 9.75 10.25 10.75 11.25 11.75 12.25 12.75 13.25 13.75 14.25 14.75]; 
+if numel(minfreq)>1
+    nFreq=numel(minfreq);
+end
 
 %event type A
 nSubjects=10;
 nTries = 10; %length(eTimesA);
 TFA     = zeros(nChan, nSubjects*nTries, nFreq, nSamples);
-TFb     = zeros(nChan, nSubjects*nTries, nFreq, nSamples);
+TFB     = zeros(nChan, nSubjects*nTries, nFreq, nSamples);
 
 %event 1 (A)
 iCase=1;

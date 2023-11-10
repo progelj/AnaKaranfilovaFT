@@ -9,6 +9,9 @@ function [dataTF,freqs] = timeFreqSpace(data, srate, minfreq, maxfreq, nfreq)
 %  minfreq - smallest frequency of extracted frequency components
 %  maxfreq - highest frequency of extracted frequency components
 %    nfreq - number of frequency components extracted
+% Input option 2:
+%   if the 3rd atgument (minfreq) is a vector, it is considered as frequencies 
+%   for copmuting TF transform and the 4th and 5th arguments are neglected
 %------------------------------------------
 % (c): Peter Rogelj - peter.rogelj@upr.si
 %------------------------------------------
@@ -17,24 +20,30 @@ if size(data,1)>size(data,2)
     warning('transposing data');
     data=data';
 end
-if nargin<5
-    nfreq=30;
-end
-if nargin<4
-    maxfreq=40;
-end
-if nargin<3
-    minfreq=1;
-end
+
 if nargin<2
     warning('Presuming 500Hz sampling rate (or add the 2nd argument).')
     srate=500;
 end
 
+if nargin>=3 && numel(minfreq)>1 % ability to define exact frequencies
+    freqs = minfreq;
+else
+    if nargin<5
+        nfreq=30;
+    end
+    if nargin<4
+        maxfreq=40;
+    end
+    if nargin<3
+        minfreq=1;
+    end
+    freqs= logspace(log10(minfreq),log10(maxfreq),nfreq); %generates n points between decades 10^a and 10^b.
+end
+
 nbchan=size(data,1);
 pnts=size(data,2);
 
-freqs= logspace(log10(minfreq),log10(maxfreq),nfreq); %generates n points between decades 10^a and 10^b.
 Ts=1./freqs;
 
 dataTF=zeros(nbchan, nfreq, pnts);
